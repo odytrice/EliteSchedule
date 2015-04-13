@@ -38,7 +38,11 @@
                 })
                 .value();
 
-            console.log(model.games);
+            model.teamStanding = _.chain(data.standings)
+                .map(function(s){return s.divisionStandings;})
+                .flatten()
+                .find({"teamId":model.teamID})
+                .value();
 
             function isTeamInGame(item) {
                 return item.team1Id === model.teamId || item.team2Id === model.teamID;
