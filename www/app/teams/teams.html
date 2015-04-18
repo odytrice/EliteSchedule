@@ -1,5 +1,6 @@
 <ion-view title="Teams" ng-controller="TeamsCtrl as model">
     <ion-content class="has-header">
+        <ion-refresher pulling-text="Pull to Refresh..." on-refresh="model.loadList(true)"></ion-refresher>
         <div class="list">
             <div ng-repeat="division in model.teams">
 

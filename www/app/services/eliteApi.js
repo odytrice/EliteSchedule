@@ -11,45 +11,51 @@
 
         //Create Cache if not exists
         var cache = CacheFactory.get('eliteApiCache');
-        if(!cache) cache = CacheFactory("eliteApiCache",{
+        if (!cache) cache = CacheFactory("eliteApiCache", {
             maxAge: 10000,
-            deleteOnExpire:"aggressive",
+            deleteOnExpire: "aggressive",
             storageMode: "localStorage"
         });
 
         cache.setOptions({
-            onExpire: function(key,value){
-                fetchData(key).then(function(){
+            onExpire: function (key, value) {
+                fetchData(key).then(function () {
                     console.log("Cache was Automatically Updated");
-                },function(){
+                }, function () {
                     console.log("Error getting data. Putting expired items");
-                    cache.put(key,value,new Date());
+                    cache.put(key, value, new Date());
                 });
             }
         });
 
         //Get Leagues
-        function getLeagues() {
-            return getData('/api/leagues.json');
+        function getLeagues(forceRefresh) {
+            return getData('/api/leagues.json', forceRefresh);
         }
 
-        function getLeagueData() {
-            return getData('/api/leaguedata.json');
+        function getLeagueData(forceRefresh) {
+            return getData('/api/leaguedata.json', forceRefresh);
         }
 
-        function getData(url) {
+        function getData(url, forceRefresh) {
+            if (typeof forceRefresh === "undefined") {
+                forceRefresh = false;
+            }
+
             var defer = $q.defer(),
-                data =  cache.get(url);
+                data = cache.get(url);
 
-            if (data) {
+            if (data && !forceRefresh) {
                 console.log("Found data inside cache", data);
                 defer.resolve(data);
             } else {
                 $ionicLoading.show({template: 'Loading...'});
-                fetchData(url).then(function(){
+                return fetchData(url).then(function (result) {
                     $ionicLoading.hide();
-                },function(){
+                    return result;
+                }, function (error) {
                     $ionicLoading.hide();
+                    return error;
                 });
             }
             return defer.promise;
@@ -72,8 +78,7 @@
         };
 
 
-
-        function setLeagueId(leagueId){
+        function setLeagueId(leagueId) {
             currentLeagueId = leagueId
         }
 

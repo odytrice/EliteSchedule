@@ -4,14 +4,20 @@
 (function(){
     'use strict';
 
-    var controller = function(_eliteApi){
+    var controller = function($scope,_eliteApi){
         var model = this;
-        _eliteApi.getLeagueData().then(function(data){
-            model.teams = data.teams;
-        });
+        model.loadList = function(forceRefresh){
+            _eliteApi.getLeagueData(forceRefresh).then(function(data){
+                model.teams = data.teams;
+            }).finally(function(){
+                $scope.$broadcast('scroll.refreshComplete')
+            });
+        };
+
+        model.loadList(false);
     };
 
-    controller.$inject = ['_eliteApi'];
+    controller.$inject = ['$scope','_eliteApi'];
 
     angular.module('eliteApp').controller('TeamsCtrl',controller);
 })();
