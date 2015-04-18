@@ -1,7 +1,7 @@
 /**
  * Created by Ody on 4/9/2015.
  */
-angular.module("eliteApp", ["ionic"])
+angular.module("eliteApp", ["ionic", "angular-cache"])
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -17,8 +17,8 @@ angular.module("eliteApp", ["ionic"])
     })
 
     .config(function ($stateProvider, $urlRouterProvider) {
-        $stateProvider
 
+        $stateProvider
             .state('home', {
                 url: "/home",
                 templateUrl: "app/home/home.html",

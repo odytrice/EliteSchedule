@@ -5,7 +5,7 @@
 (function () {
     'use strict';
 
-    var controller = function ($stateParams, _eliteApi) {
+    var controller = function ($stateParams, $ionicPopup, _eliteApi, _myTeamsService) {
         var model = this;
         model.teamID = Number($stateParams.id);
 
@@ -18,12 +18,14 @@
                 .find({'id': model.teamID})
                 .value();
 
-            model.teamName = team.name;
+            model.team = team;
+
+            model.following = _myTeamsService.isFollowingTeam(team.id);
 
             model.games = _.chain(data.games)
                 .filter(isTeamInGame)
                 .map(function (item) {
-                    var isTeam1 = (item.team1Id === model.teamID ? true : false)
+                    var isTeam1 = (item.team1Id === model.teamID);
                     var opponentName = isTeam1 ? item.team2 : item.team1;
                     var scoreDisplay = getScoreDisplay(isTeam1, item.team1Score, item.team2Score);
                     return {
@@ -39,10 +41,33 @@
                 .value();
 
             model.teamStanding = _.chain(data.standings)
-                .map(function(s){return s.divisionStandings;})
+                .map(function (s) {
+                    return s.divisionStandings;
+                })
                 .flatten()
-                .find({"teamId":model.teamID})
+                .find({"teamId": model.teamID})
                 .value();
+
+            model.toggleFollow = function () {
+                if(model.following){
+                    //var confirmPopup = $ionicPopup.confirm({
+                    //    title: "Unfollow?",
+                    //    template: 'Are you sure you want to unfollow?'
+                    //});
+                    //
+                    //confirmPopup.then(function(res){
+                    //    if(res){
+                    //        _myTeamsService.unfollowTeam(model.team.id);
+                    //    }else{
+                    //        model.following = false;
+                    //    }
+                    //});
+                    _myTeamsService.followTeam(model.team);
+                }
+                else{
+                    _myTeamsService.unfollowTeam(model.team.id);
+                }
+            };
 
             function isTeamInGame(item) {
                 return item.team1Id === model.teamId || item.team2Id === model.teamID;
@@ -63,6 +88,6 @@
 
     };
 
-    controller.$inject = ['$stateParams', '_eliteApi'];
+    controller.$inject = ['$stateParams','$ionicPopup', '_eliteApi','_myTeamsService'];
     angular.module('eliteApp').controller('TeamDetailCtrl', controller);
 })();
