@@ -1,12 +1,7 @@
 <ion-view title="Location Map" ng-controller="LocationMapCtrl as model">
     <ion-content class="has-header">
-        <ui-gmap-google-map dragging="true" center="model.map.center" zoom="model.map.zoom" >
-            <ui-gmap-marker idKey="1" coords="model.marker" options="model.marker.options" click="model.onClick()">
-                <ui-gmap-window options="windowOptions" closeClick="model.closeClick()">
-                    <div>
-                        {{model.marker.title}}
-                    </div>
-                </ui-gmap-window>
+        <ui-gmap-google-map dragging="true" center="model.map.center" zoom="model.map.zoom">
+            <ui-gmap-marker idKey="1" coords="model.marker" options="model.marker.options" events="model.marker.events">
             </ui-gmap-marker>
         </ui-gmap-google-map>
     </ion-content>

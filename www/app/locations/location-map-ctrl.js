@@ -20,27 +20,23 @@
                 latitude: model.location.latitude,
                 longitude: model.location.longitude,
                 showWindow: true,
-                title: model.location.name + " <br/> (Tap for directions)",
+                title: {
+                    text: model.location.name,
+                    hint: "(Tap for directions)"
+                },
                 options: {
-                    visible: true,
+                    visible: true
+                },
+                events:{
+                    'click':function(){
+                        //$scope.$apply(function(){
+                            window.location.href = "geo:" + model.marker.latitude + "," + model.marker.longitude;
+                        //});
+                    }
                 }
             };
             model.map.center.latitude = model.location.latitude;
             model.map.center.longitude = model.location.longitude;
-
-
-            model.windowOptions = {
-                visible: false
-            };
-
-            model.onClick = function () {
-                model.windowOptions.visible = !model.windowOptions.visible;
-            };
-
-            model.closeClick = function () {
-                model.windowOptions.visible = false;
-            };
-
         });
     };
 
