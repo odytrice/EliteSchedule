@@ -46,7 +46,7 @@
                 data = cache.get(url);
 
             if (data && !forceRefresh) {
-                console.log("Found data inside cache", data);
+                console.log("Found data inside cache");
                 defer.resolve(data);
             } else {
                 $ionicLoading.show({template: 'Loading...'});

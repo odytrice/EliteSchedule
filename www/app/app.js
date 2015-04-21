@@ -1,7 +1,7 @@
 /**
  * Created by Ody on 4/9/2015.
  */
-angular.module("eliteApp", ["ionic", "angular-cache"])
+angular.module("eliteApp", ["ionic", "angular-cache", "uiGmapgoogle-maps"])
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -90,6 +90,16 @@ angular.module("eliteApp", ["ionic", "angular-cache"])
                     }
                 }
             })
+
+            .state('app.location-map',{
+                url:"/location-map/:id",
+                views:{
+                    'mainContent':{
+                        templateUrl: 'app/locations/location-map.html'
+                    }
+                }
+            })
+
             .state('app.rules', {
                 url: "/rules",
                 views: {
